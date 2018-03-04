@@ -1,19 +1,22 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 
+# Constantes que l'on peut changer en fonction des tests de jouabilité
 # probabilités de mourir
 proba_die = [0,0.2,0.4,0.6]
 # probabilité du pollant de faire changer de sexe (identique pour chaque polluant)
 proba_pol = [0,0.25,0.50,0.75]
 # # # gender id
 # l_genders = ['male', 'intersexe', 'female']
+nr_boucles_changement_sexe = 2
 
 
 def change_sex_or_die(gender, polluants, depolluants, verbose=False):
     """
     Pour chaque poisson on calcule ce qu'il devient :
     - s'il meurt
-    - s'il change de sex
+    - s'il change de sexe
+    La probabilité de changé de sexe est appliqué un nombre de fois défini par nr_boucles_changement_sexe
 
     Inputs:
         - gender : string:
@@ -46,8 +49,7 @@ def change_sex_or_die(gender, polluants, depolluants, verbose=False):
         g_id = 2
 
     # on exécute nr_boucles fois l'action, une fois pour chaque polluant
-    nr_boucles = 2
-    for i in range(nr_boucles):
+    for i in range(nr_boucles_changement_sexe):
         if verbose:
             print "begin: g_id", g_id
         # on applique la proba du polluant féminisant
