@@ -38,7 +38,7 @@ class SplashScreen(Screen):
 
 class HomeScreen(Screen):
 	def __init__(self,game):
-		Screen.__init__(self,game=game,background='images/home.png')
+		Screen.__init__(self,game=game,background='include/Screens/niveaux.png')
 		s = sprites.Button(screen=self,img='images/blih.png',action={'action':'enter_level','timer':5},img_pushed='images/blah.png')
 		s.activate()
 		s.show()
