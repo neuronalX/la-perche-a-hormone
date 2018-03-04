@@ -39,7 +39,7 @@ class SplashScreen(Screen):
 class HomeScreen(Screen):
 	def __init__(self,game):
 		Screen.__init__(self,game=game,background='images/home.png')
-		s = sprites.Button(screen=self,img='images/blih.png',action={'action':'enter_level','timer':30},img_pushed='images/blah.png')
+		s = sprites.Button(screen=self,img='images/blih.png',action={'action':'enter_level','timer':5},img_pushed='images/blah.png')
 		s.activate()
 		s.show()
 		self.sprites['start_button'] = s
@@ -54,17 +54,17 @@ class HomeScreen(Screen):
 class LevelScreen(Screen):
 	def __init__(self,game):
 		Screen.__init__(self,game=game,background='include/Screens/bassins.png')
-		s = sprites.Button(screen=self,img='images/blih.png',action={'action':'return_home','timer':10},img_pushed='images/blah.png',X=50,Y=100)
-		s.activate()
-		s.show()
-		self.sprites['home_button'] = s
+		#s = sprites.Button(screen=self,img='images/blih.png',action={'action':'return_home','timer':5},img_pushed='images/blah.png',X=50,Y=100)
+		#s.activate()
+		#s.show()
+		#self.sprites['home_button'] = s
 		
-		s = sprites.Button(screen=self,img='images/blih.png',action={'action':'launch_fish','timer':5},img_pushed='images/blah.png',X=50,Y=100)
+		s = sprites.Button(screen=self,img='images/blih.png',sound='include/Audio/BipInterface.wav',action={'action':'launch_fish','timer':5},img_pushed='images/blah.png',X=50,Y=100)
 		s.activate()
 		s.show()
 		self.sprites['run_button'] = s
 		
-		s = sprites.Button(screen=self,img='images/blih.png',action={'action':'add_dep1','timer':5},img_pushed='images/blah.png',X=50,Y=100)
+		s = sprites.Button(screen=self,img='images/blih.png',sound='include/Audio/BipInterface.wav',action={'action':'add_dep1','timer':5},img_pushed='images/blah.png',X=50,Y=100)
 		s.activate()
 		s.show()
 		self.sprites['dep1_button'] = s
@@ -97,18 +97,17 @@ class LevelScreen(Screen):
 			self.polluants = [random.choice(range(1,3)),0,random.choice(range(4))]
 		else:
 			self.polluants = [random.choice(range(4)),random.choice(range(4)),random.choice(range(4))]
-		self.sprites['home_button'].activate()
 		self.sprites['run_button'].activate()
-		if self.available_depolluants[0] > 0 and self.depolluants[0]<3:
+		if self.game.available_depolluants[0] > 0 and self.depolluants[0]<3:
 			self.sprites['dep1_button'].activate()
 		else:
 			self.sprites['dep1_button'].deactivate()
 
-		if self.available_depolluants[1] > 0 and self.depolluants[1]<3:
+		if self.game.available_depolluants[1] > 0 and self.depolluants[1]<3:
 			self.sprites['dep2_button'].activate()
 		else:
 			self.sprites['dep2_button'].deactivate()
-		if self.available_depolluants[2] > 0 and self.depolluants[2]<3:
+		if self.game.available_depolluants[2] > 0 and self.depolluants[2]<3:
 			self.sprites['dep3_button'].activate()
 		else:
 			self.sprites['dep3_button'].deactivate()

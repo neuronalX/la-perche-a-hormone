@@ -1,6 +1,7 @@
 import pygame
 import screens
 import mechanisms
+import sprites
 
 from pygame import locals as pg_locals
 
@@ -8,7 +9,7 @@ class Game(object):
 	def __init__(self,window):
 		self.looping = True
 		self.window = window
-		self.splash_screen = screens.SplashScreen(game=self,background='include/Screens/splash.png')
+		self.splash_screen = screens.SplashScreen(game=self,background='include/Screens/splash 2.png')
 		self.intro_screen = screens.SplashScreen(game=self,background='include/Screens/intro.png')
 		self.home_screen = screens.HomeScreen(game=self)
 		self.level_screen = screens.LevelScreen(game=self)
@@ -89,5 +90,5 @@ class Game(object):
 				gender = 'male'
 			else:
 				gender = 'femelle'
-			end_status = mechanisms.change_sex_or_die(gender=gender,polluants=self.polluants,depolluants=self.active_screen.depolluants)
-			self.active_screen.sprites['fish'+str(k)] = sprites.Fish(k=k,gender=gender,end_status=end_status)
+			end_status = mechanisms.change_sex_or_die(gender=gender,polluants=self.active_screen.polluants,depolluants=self.active_screen.depolluants)
+			self.active_screen.sprites['fish'+str(k)] = sprites.Fish(screen=self.active_screen,scale=0.5,k=k,gender=gender,end_status=end_status)
