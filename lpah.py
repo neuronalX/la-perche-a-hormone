@@ -5,7 +5,7 @@ from pygame import locals as pg_locals
 import games
 
 pygame.init()
-
+pygame.mixer.init()
 
 X = 1366
 Y = 768
