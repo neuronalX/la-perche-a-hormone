@@ -1,6 +1,7 @@
 import pygame
 import sprites
 import random
+from pygame import locals as pg_locals
 
 class Screen(object):
 	def __init__(self,game,background):
@@ -29,6 +30,11 @@ class Screen(object):
 	def deactivate(self):
 		pass
 
+class SplashScreen(Screen):
+	def loop(self):
+		for event in self.game.events:
+			if event.type == pg_locals.MOUSEBUTTONUP and event.button == 1:
+				self.game.action = {'action':'next'}
 
 class HomeScreen(Screen):
 	def __init__(self,game):
@@ -47,7 +53,7 @@ class HomeScreen(Screen):
 
 class LevelScreen(Screen):
 	def __init__(self,game):
-		Screen.__init__(self,game=game,background='images/level.jpg')
+		Screen.__init__(self,game=game,background='include/Screens/bassins.png')
 		s = sprites.Button(screen=self,img='images/blih.png',action={'action':'return_home','timer':10},img_pushed='images/blah.png',X=50,Y=100)
 		s.activate()
 		s.show()

@@ -173,14 +173,14 @@ class MovingElt(Sprite):
 		pass
 
 class Fish(MovingElt):
-	def __init__(self,k=0,loop_img=False,gender='female',end_status='female',*args,**kwargs):
+	def __init__(self,k=0,loop_img=False,gender='femelle',end_status='femelle',*args,**kwargs):
 		self.Xmin = 100
 		self.dy = 50
 		self.Tmax = 150
 		Y = 100 + k*dy
 		transition = random.choice(range(self.Tmax))
-		self.start_img = 'images/poissons/'+gender+'.png'
-		self.end_img = 'images/poissons/'+end_status+'.png'
+		self.start_img = 'include/poissons/'+gender+'.png'
+		self.end_img = 'include/poissons/'+end_status+'.png'
 		self.Xmax = 1000
 		if k == 0:
 			sound = 'sounds/fish.mp3'

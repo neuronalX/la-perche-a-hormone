@@ -8,9 +8,11 @@ class Game(object):
 	def __init__(self,window):
 		self.looping = True
 		self.window = window
+		self.splash_screen = screens.SplashScreen(game=self,background='include/Screens/splash.png')
+		self.intro_screen = screens.SplashScreen(game=self,background='include/Screens/intro.png')
 		self.home_screen = screens.HomeScreen(game=self)
 		self.level_screen = screens.LevelScreen(game=self)
-		self.active_screen = self.home_screen
+		self.active_screen = self.splash_screen
 		self.timer = 0
 		self.action = None
 
@@ -21,16 +23,16 @@ class Game(object):
 		self.level_end = 4
 
 	def loop(self):
-		for event in self.events:
-			if event.type == pg_locals.KEYDOWN:
-				if event.key == pg_locals.K_DOWN:
-					print('blah')
-			elif event.type == pg_locals.MOUSEBUTTONDOWN:
-				print(event)
-			elif event.type == pg_locals.MOUSEBUTTONUP:
-				print(event)
-			else:
-				pass 
+		#for event in self.events:
+		#	if event.type == pg_locals.KEYDOWN:
+		#		if event.key == pg_locals.K_DOWN:
+		#			print('blah')
+		#	elif event.type == pg_locals.MOUSEBUTTONDOWN:
+		#		print(event)
+		#	elif event.type == pg_locals.MOUSEBUTTONUP:
+		#		print(event)
+		#	else:
+		#		pass 
 
 		self.active_screen.loop()
 
@@ -47,7 +49,12 @@ class Game(object):
 
 	def do_action(self):
 		if self.timer == 0 and self.action is not None:
-			if self.action['action'] == 'return_home':
+			if self.action['action'] == 'next':
+				if self.active_screen == self.splash_screen:
+					self.active_screen = self.intro_screen
+				elif self.active_screen == self.intro_screen:
+					self.active_screen = self.home_screen
+			elif self.action['action'] == 'return_home':
 				if self.active_screen != self.home_screen:
 					self.active_screen.deactivate()
 					self.active_screen = self.home_screen
@@ -81,6 +88,6 @@ class Game(object):
 			if k < 5:
 				gender = 'male'
 			else:
-				gender = 'female'
+				gender = 'femelle'
 			end_status = mechanisms.change_sex_or_die(gender=gender,polluants=self.polluants,depolluants=self.active_screen.depolluants)
 			self.active_screen.sprites['fish'+str(k)] = sprites.Fish(k=k,gender=gender,end_status=end_status)
