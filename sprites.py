@@ -1,0 +1,161 @@
+import copy
+import pygame
+from pygame import locals as pg_locals
+
+class Sprite(object):
+	def __init__(self,screen,img,X=0,Y=0,action={},img_deact=None):
+		self.X = X
+		self.Y = Y
+		self.active = False
+		self.visible = True
+		self.screen = screen
+		if img is not None:
+			self.img = pygame.image.load(img).convert()
+		else:
+			self.img = None
+		self.img_orig = self.img
+		if img_deact is not None:
+			self.img_deact = pygame.image.load(img_deact).convert()
+		else:
+			self.img_deact = self.img
+		self.do_action = False
+		self.action = copy.deepcopy(action)
+
+	def step(self):
+		pass
+
+	def hide(self):
+		self.visible = False
+		
+	def show(self):
+		self.visible = True
+
+	def activate(self):
+		self.active = True
+		self.img = self.img_orig
+	
+	def deactivate(self):
+		self.active = False
+		self.img = self.img_deact
+		if hasattr(self,sound) and self.sound is not None:
+			self.sound.stop()
+
+
+class Popup(Sprite)
+	def  __init__(self,screen,img,X=0,Y=0,action={},sound=None,img_deact=None):
+		Sprite.__init__(self,screen=screen,img=img,X=X,Y=Y,action=copy.deepcopy(action),img_deact=img_deact)
+		if sound is None:
+			self.sound = None
+		else:
+			self.sound = pygame.mixer.Sound(sound)
+		self.sound_played = False
+
+	def step(self):
+		if self.sound is not None and not self.sound_played:
+			self.sound.play()
+		self.sound_played = True
+
+
+class Button(Sprite):
+	def __init__(self,screen,img,X=0,Y=0,action={},img_pushed=None,sound=None,img_deact=None):
+		Sprite.__init__(self,screen=screen,img=img,X=X,Y=Y,action=copy.deepcopy(action),img_deact=img_deact)
+		self.pushed = False
+		if img_pushed is None:
+			self.img_pushed = self.img
+		else:
+			self.img_pushed = pygame.image.load(img_pushed).convert()
+		if sound is None:
+			self.sound = None
+		else:
+			self.sound = pygame.mixer.Sound(sound)
+
+
+
+
+	def push(self):
+		if not self.pushed: 
+			self.pushed = True
+			self.push_action()
+
+	def release(self):
+		self.pushed = False
+		self.release_action()
+
+	def push_action(self):
+		tempimg = self.img
+		self.img = self.img_pushed
+		if self.sound is not None:
+			self.sound.play()
+
+	def release_action(self):
+		self.img = self.img_orig
+		self.do_action = True
+
+	def step(self):
+		if self.visible and self.active:
+			for event in self.screen.game.events:
+				if event.type == pg_locals.MOUSEBUTTONDOWN and event.button == 1:
+					pos = pygame.mouse.get_pos()
+					xx = pos[0]
+					yy = pos[1]
+					if self.X <= xx <= self.X + self.img.get_size()[0] and self.Y <= yy <= self.Y + self.img.get_size()[1]:
+						self.push()
+				if event.type == pg_locals.MOUSEBUTTONUP and event.button == 1 and self.pushed:
+					self.release()
+
+class TextZone(Sprite):
+
+	def __init__(self,screen,img,X=0,Y=0,action={},img_deact=None):
+		Sprite.__init__(self,screen=screen,img=None,X=X,Y=Y,action=copy.deepcopy(action),img_deact=img_deact)
+		self.font = pygame.font.SysFont("monospace", 15)
+		self.img = self.font.render(img, 1, (255,255,0))
+
+
+
+class TextVar(TextZone):
+	
+	def __init__(self,screen,img,X=0,Y=0,action={},img_deact=None):
+		Sprite.__init__(self,screen=screen,img=None,X=X,Y=Y,action=copy.deepcopy(action),img_deact=img_deact)
+		self.font = pygame.font.SysFont("monospace", 15)
+		self.var = img
+		self.img = self.font.render(getattr(self.screen.game,self.var), 1, (255,255,0))
+
+	def step(self):
+		self.img = self.font.render(getattr(self.screen.game,self.var), 1, (255,255,0))
+
+class MovingElt(Sprite):	
+	def __init__(self,screen,img,X=0,Y=0,action={},transition=10,img_deact=None,sound=None,sound_transition=60):
+		Sprite.__init__(self,screen=screen,img=None,X=X,Y=Y,action=copy.deepcopy(action),img_deact=img_deact)
+		self.transition = transition
+		if sound is None:
+			self.sound = None
+		else:
+			self.sound = pygame.mixer.Sound(sound)
+		self.sound_transition = sound_transition
+		if isinstance(img,list):
+			self.img_seq = [pygame.image.load(im).convert() for im in img]
+		else:
+			self.img_seq = [pygame.image.load(img).convert()]
+		self.img_index = 0
+		self.img = self.img_seq[self.img_index]
+		self.counter_transition = 0
+		self.counter_sound = 0
+
+	def step(self):
+		if self.counter_transition == self.transition:
+			self.img_index += 1
+			self.img_index = min(self.img_index,len(self.img_seq)-1)
+			self.img = self.img_seq[self.img_index]
+			self.counter_transition = 0
+		else:
+			self.counter_transition += 1
+		if self.counter_sound == self.sound_transition:
+			if self.sound is not None:
+				self.sound.play()
+		else:
+			self.counter_sound += 1
+		self.move()
+
+	def move(self):
+		pass
+
