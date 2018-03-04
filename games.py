@@ -62,6 +62,7 @@ class Game(object):
 					for s in self.active_screen.sprites.values():
 						if s.visible:
 							s.deactivate()
+					self.create_fish()
 			elif self.action['action'] == 'add_element':
 				if self.active_screen.__class__ == screens.LevelScreen:
 					getattr(self,'add_'+self.action['element'])()

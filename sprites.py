@@ -1,11 +1,13 @@
 import copy
 import pygame
 from pygame import locals as pg_locals
+import math
 
 class Sprite(object):
-	def __init__(self,screen,img,X=0,Y=0,action={},img_deact=None):
+	def __init__(self,screen,img,X=0,Y=0,action={},img_deact=None,scale=1.):
 		self.X = X
 		self.Y = Y
+		self.scale = scale
 		self.active = False
 		self.visible = True
 		self.screen = screen
@@ -40,10 +42,20 @@ class Sprite(object):
 		if hasattr(self,sound) and self.sound is not None:
 			self.sound.stop()
 
+	def blit(self):
+		if self.visible and self.img is not None:
+			dX = self.img.get_width()
+			dY = self.img.get_height()
+			dx = math.floor(dX*self.scale)
+			dy = math.floor(dY*self.scale)
+			x = self.X+(dX-dx)/2
+			y = self.Y+(dY-dy)/2
+			img_resized = pygame.transform.scale(self.img, (dx, dy))
+			self.screen.blit(img_resized,(x,y))  
 
-class Popup(Sprite)
-	def  __init__(self,screen,img,X=0,Y=0,action={},sound=None,img_deact=None):
-		Sprite.__init__(self,screen=screen,img=img,X=X,Y=Y,action=copy.deepcopy(action),img_deact=img_deact)
+class Popup(Sprite):
+	def  __init__(self,screen,img,X=0,Y=0,action={},sound=None,img_deact=None,scale=1.):
+		Sprite.__init__(self,screen=screen,img=img,X=X,Y=Y,action=copy.deepcopy(action),img_deact=img_deact,scale=scale)
 		if sound is None:
 			self.sound = None
 		else:
@@ -57,8 +69,8 @@ class Popup(Sprite)
 
 
 class Button(Sprite):
-	def __init__(self,screen,img,X=0,Y=0,action={},img_pushed=None,sound=None,img_deact=None):
-		Sprite.__init__(self,screen=screen,img=img,X=X,Y=Y,action=copy.deepcopy(action),img_deact=img_deact)
+	def __init__(self,screen,img,X=0,Y=0,action={},img_pushed=None,sound=None,img_deact=None,scale=1.):
+		Sprite.__init__(self,screen=screen,img=img,X=X,Y=Y,action=copy.deepcopy(action),img_deact=img_deact,scale=scale)
 		self.pushed = False
 		if img_pushed is None:
 			self.img_pushed = self.img
@@ -105,8 +117,8 @@ class Button(Sprite):
 
 class TextZone(Sprite):
 
-	def __init__(self,screen,img,X=0,Y=0,action={},img_deact=None):
-		Sprite.__init__(self,screen=screen,img=None,X=X,Y=Y,action=copy.deepcopy(action),img_deact=img_deact)
+	def __init__(self,screen,img,X=0,Y=0,action={},img_deact=None,scale=1.):
+		Sprite.__init__(self,screen=screen,img=None,X=X,Y=Y,action=copy.deepcopy(action),img_deact=img_deact,scale=scale)
 		self.font = pygame.font.SysFont("monospace", 15)
 		self.img = self.font.render(img, 1, (255,255,0))
 
@@ -114,8 +126,8 @@ class TextZone(Sprite):
 
 class TextVar(TextZone):
 	
-	def __init__(self,screen,img,X=0,Y=0,action={},img_deact=None):
-		Sprite.__init__(self,screen=screen,img=None,X=X,Y=Y,action=copy.deepcopy(action),img_deact=img_deact)
+	def __init__(self,screen,img,X=0,Y=0,action={},img_deact=None,scale=1.):
+		Sprite.__init__(self,screen=screen,img=None,X=X,Y=Y,action=copy.deepcopy(action),img_deact=img_deact,scale=scale)
 		self.font = pygame.font.SysFont("monospace", 15)
 		self.var = img
 		self.img = self.font.render(getattr(self.screen.game,self.var), 1, (255,255,0))
@@ -124,8 +136,8 @@ class TextVar(TextZone):
 		self.img = self.font.render(getattr(self.screen.game,self.var), 1, (255,255,0))
 
 class MovingElt(Sprite):	
-	def __init__(self,screen,img,X=0,Y=0,action={},transition=10,img_deact=None,sound=None,sound_transition=60):
-		Sprite.__init__(self,screen=screen,img=None,X=X,Y=Y,action=copy.deepcopy(action),img_deact=img_deact)
+	def __init__(self,screen,img,X=0,Y=0,action={},transition=10,img_deact=None,sound=None,sound_transition=60,scale=1.):
+		Sprite.__init__(self,screen=screen,img=None,X=X,Y=Y,action=copy.deepcopy(action),img_deact=img_deact,scale=scale)
 		self.transition = transition
 		if sound is None:
 			self.sound = None
