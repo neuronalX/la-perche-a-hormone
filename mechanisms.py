@@ -47,7 +47,7 @@ def change_sex_or_die(gender, polluants, depolluants, verbose=False):
 
     if gender == "male":
         g_id = 0
-    elif gender == "female":
+    elif gender == "female" or gender == "femelle":
         g_id = 2
 
     # on exécute nr_boucles fois l'action, une fois pour chaque polluant
