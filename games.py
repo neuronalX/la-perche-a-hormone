@@ -1,5 +1,6 @@
 import pygame
 import screens
+import mechanisms
 
 from pygame import locals as pg_locals
 
@@ -75,4 +76,11 @@ class Game(object):
 			self.timer -= 1
 			print(self.timer)
 
-
+	def create_fish(self):
+		for k in range(10):
+			if k < 5:
+				gender = 'male'
+			else:
+				gender = 'female'
+			end_status = mechanisms.change_sex_or_die(gender=gender,polluants=self.polluants,depolluants=self.active_screen.depolluants)
+			self.active_screen.sprites['fish'+str(k)] = sprites.Fish(k=k,gender=gender,end_status=end_status)

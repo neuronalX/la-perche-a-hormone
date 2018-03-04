@@ -84,11 +84,11 @@ class LevelScreen(Screen):
 
 	def activate(self):
 		if self.game.level == 0:
-			self.polluants = [random.choice(range(1,3)),0,0]
+			self.polluants = [0,0,random.choice(range(1,3))]
 		elif self.game.level == 1:
-			self.polluants = [random.choice(range(4)),random.choice(range(1,3)),0]
+			self.polluants = [0,random.choice(range(1,3)),random.choice(range(4))]
 		elif self.game.level == 2:
-			self.polluants = [random.choice(range(4)),0,random.choice(range(1,3))]
+			self.polluants = [random.choice(range(1,3)),0,random.choice(range(4))]
 		else:
 			self.polluants = [random.choice(range(4)),random.choice(range(4)),random.choice(range(4))]
 		self.sprites['home_button'].activate()

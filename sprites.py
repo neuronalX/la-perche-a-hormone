@@ -136,9 +136,10 @@ class TextVar(TextZone):
 		self.img = self.font.render(getattr(self.screen.game,self.var), 1, (255,255,0))
 
 class MovingElt(Sprite):	
-	def __init__(self,screen,img,X=0,Y=0,action={},transition=10,img_deact=None,sound=None,sound_transition=60,scale=1.):
+	def __init__(self,screen,img,X=0,Y=0,action={},transition=10,loop_img=True,img_deact=None,sound=None,sound_transition=60,scale=1.):
 		Sprite.__init__(self,screen=screen,img=None,X=X,Y=Y,action=copy.deepcopy(action),img_deact=img_deact,scale=scale)
 		self.transition = transition
+		self.loop_img = loop_img
 		if sound is None:
 			self.sound = None
 		else:
@@ -170,4 +171,27 @@ class MovingElt(Sprite):
 
 	def move(self):
 		pass
+
+class Fish(MovingElt):
+	def __init__(self,k=0,loop_img=False,gender='female',end_status='female',*args,**kwargs):
+		self.Xmin = 100
+		self.dy = 50
+		self.Tmax = 150
+		Y = 100 + k*dy
+		transition = random.choice(range(self.Tmax))
+		self.start_img = 'images/poissons/'+gender+'.png'
+		self.end_img = 'images/poissons/'+end_status+'.png'
+		self.Xmax = 1000
+		if k == 0:
+			sound = 'sounds/fish.mp3'
+			sound_transition = 40
+		MovingElt.__init__(self,loop_img=loop_img,img=[self.start_img,self.end_img],transition=transition,X=self.Xmin,Y=Y,*args,**kwargs)
+
+	def move(self):
+		if self.end_img != 'images/poissons/dead.png' or self.img != self.img_seq[-1]:
+			dx = (self.Xmax-self.Xmin)/self.Tmax
+			self.X += dx
+			dy = random.choice(range(5))-2
+			self.Y += dy
+
 
