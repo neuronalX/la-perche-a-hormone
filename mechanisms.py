@@ -36,8 +36,10 @@ def change_sex_or_die(gender, polluants, depolluants, verbose=False):
     # niveau de polluants
     niv_pol = clean_up(polluants, depolluants)
     if verbose:
-        print "polluants:", polluants
-        print "niv_pol:", niv_pol
+        print("polluants:")
+        print(polluants)
+        print("niv_pol:")
+        print(niv_pol)
 
     # est-ce que le poisson meurt ?
     if proba_die[niv_pol[2]] > np.random.uniform(0,1):
@@ -51,19 +53,19 @@ def change_sex_or_die(gender, polluants, depolluants, verbose=False):
     # on exécute nr_boucles fois l'action, une fois pour chaque polluant
     for i in range(nr_boucles_changement_sexe):
         if verbose:
-            print "begin: g_id", g_id
+            print("begin: g_id", g_id)
         # on applique la proba du polluant féminisant
         if proba_pol[niv_pol[0]] > np.random.uniform(0,1):
             g_id += 1
             if verbose:
-                print "after fem: g_id", g_id
+                print("after fem: g_id", g_id)
         # on applique la proba du polluant masculinisant
         if proba_pol[niv_pol[1]] > np.random.uniform(0,1):
             g_id -= 1
             if verbose:
-                print "after masc: g_id", g_id
+                print("after masc: g_id", g_id)
     if verbose:
-        print "FINAL g_id:", g_id
+        print("FINAL g_id:", g_id)
 
     # on détermine le sexe final du poisson
     new_sex = None
@@ -74,7 +76,7 @@ def change_sex_or_die(gender, polluants, depolluants, verbose=False):
     elif g_id >= 1.333:
         new_sex = "female"
     else:
-        print "ERROR: VALUE IMPOSSIBLE"
+        print("ERROR: VALUE IMPOSSIBLE")
 
     return new_sex
 
