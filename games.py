@@ -82,7 +82,6 @@ class Game(object):
 			self.action = None
 		elif self.timer > 0:
 			self.timer -= 1
-			print(self.timer)
 
 	def create_fish(self):
 		for k in range(10):
